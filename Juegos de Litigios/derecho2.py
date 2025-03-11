@@ -13,7 +13,7 @@ app = Flask(__name__, template_folder='templates')
 app.secret_key = os.getenv("SECRET_KEY", "Diosesamor")  # Usar variable de entorno para la clave secreta
 
 # Configuración de la base de datos y carpeta de subidas
-DB_PATH = os.getenv("DB_PATH", "casos.db")  # Ruta relativa por defecto en Railway
+DB_PATH = /data/casos.db  # Ruta relativa por defecto en Railway
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "static/uploads")  # Ruta relativa dentro del contenedor
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
