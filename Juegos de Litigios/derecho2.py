@@ -10,16 +10,16 @@ import json
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='templates')
-app.secret_key = os.getenv("SECRET_KEY", "Diosesamor8095615914")  # Usar variable de entorno para la clave secreta
+app.secret_key = os.getenv("SECRET_KEY")  # Usar variable de entorno para la clave secreta
 
 # Configuración de la base de datos y carpeta de subidas
-DB_PATH = /data/casos.db  # Ruta relativa por defecto en Railway
+DB_PATH = "/data/casos.db"  # Ruta relativa por defecto en Railway
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "static/uploads")  # Ruta relativa dentro del contenedor
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Credenciales de correo desde variables de entorno
-EMAIL_USER = os.getenv("EMAIL_USER", "tu_email@gmail.com")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "tu_contraseña_de_app")
+EMAIL_USER = os.getenv("EMAIL_USER")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 # Crear la carpeta de subidas si no existe
 if not os.path.exists(UPLOAD_FOLDER):
