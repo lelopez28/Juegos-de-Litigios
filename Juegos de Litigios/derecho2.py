@@ -10,7 +10,7 @@ import json
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='templates')
-app.secret_key = os.getenv("SECRET_KEY", "clave_secreta_compartida")  # Usar variable de entorno para la clave secreta
+app.secret_key = os.getenv("SECRET_KEY", "Diosesamor")  # Usar variable de entorno para la clave secreta
 
 # Configuración de la base de datos y carpeta de subidas
 DB_PATH = os.getenv("DB_PATH", "casos.db")  # Ruta relativa por defecto en Railway
