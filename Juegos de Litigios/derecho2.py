@@ -10,8 +10,11 @@ import os
 import json
 from werkzeug.utils import secure_filename
 
+print("Iniciando la aplicación...")
+
 app = Flask(__name__, template_folder='templates')
 app.secret_key = os.getenv("SECRET_KEY")  # Usar variable de entorno para la clave secreta
+print(f"SECRET_KEY: {app.secret_key}")
 
 # Configuración de la base de datos y carpeta de subidas
 DB_PATH = "/data/casos.db"  # Ruta relativa por defecto en Railway
@@ -21,10 +24,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Credenciales de correo desde variables de entorno
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+print(f"EMAIL_USER: {EMAIL_USER}")
+print(f"EMAIL_PASSWORD: {EMAIL_PASSWORD}")
 
 # Crear la carpeta de subidas si no existe
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+     print(f"Carpeta de subidas creada: {UPLOAD_FOLDER}")
 
 # Función para inicializar la base de datos
 def init_db():
@@ -175,6 +181,8 @@ def init_db():
 
 # Inicializar la base de datos al arrancar la aplicación
 init_db()
+
+print("Configuración inicial completada.")
 
 # Funciones auxiliares (sin cambios)
 def generate_recovery_code():
