@@ -10,15 +10,22 @@ import json
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='templates')
-app.secret_key = 'clave_secreta_compartida'
-DB_PATH = r"C:/Users/lelopez/Desktop/juego_derecho/casos.db"
-UPLOAD_FOLDER = r"C:/Users/lelopez/Desktop/juego_derecho/static/uploads"
+app.secret_key = os.getenv("SECRET_KEY", "clave_secreta_compartida")  # Usar variable de entorno para la clave secreta
+
+# Configuración de la base de datos y carpeta de subidas
+DB_PATH = os.getenv("DB_PATH", "casos.db")  # Ruta relativa por defecto en Railway
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "static/uploads")  # Ruta relativa dentro del contenedor
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-EMAIL_USER = "tu_email@gmail.com"
-EMAIL_PASSWORD = "tu_contraseña_de_app"
+# Credenciales de correo desde variables de entorno
+EMAIL_USER = os.getenv("EMAIL_USER", "tu_email@gmail.com")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "tu_contraseña_de_app")
 
-# Funciones auxiliares
+# Crear la carpeta de subidas si no existe
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# Funciones auxiliares (sin cambios)
 def generate_recovery_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
@@ -525,8 +532,6 @@ def perfil():
         flash(f"Error en la base de datos: {e}")
         return redirect(url_for('inicio'))
 
-if __name__ == '__main__':
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
-    print(f"Usando base de datos en: {DB_PATH}")
-    app.run(debug=True, port=5003)
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))  # Usar el puerto de Railway
+    app.run(host="0.0.0.0", port=port)  # Escuchar en todas las interfaces
