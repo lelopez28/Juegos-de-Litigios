@@ -533,5 +533,7 @@ def perfil():
         return redirect(url_for('inicio'))
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 5000))  # Usar el puerto de Railway
-    app.run(host="0.0.0.0", port=port)  # Escuchar en todas las interfaces
+    # Solo ejecutar el servidor de desarrollo si no estamos en producción
+    if os.getenv("FLASK_ENV") != "production":
+        port = int(os.getenv("PORT", 5000))
+        app.run(host="0.0.0.0", port=port)
