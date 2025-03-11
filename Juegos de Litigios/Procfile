@@ -1,2 +1,2 @@
-web: gunicorn derecho2.py
+web: python derecho2.py
 
