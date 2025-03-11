@@ -1,3 +1,4 @@
+# (Importaciones y configuración inicial existentes)
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -24,6 +25,156 @@ EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 # Crear la carpeta de subidas si no existe
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+# Función para inicializar la base de datos
+def init_db():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        # Crear tabla de usuarios
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                real_name TEXT NOT NULL,
+                points INTEGER DEFAULT 0,
+                photo_path TEXT
+            )
+        ''')
+
+        # Crear tabla de alegatos
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS alegatos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                tabla TEXT,
+                caso_id INTEGER,
+                rol TEXT,
+                alegato TEXT,
+                puntos INTEGER,
+                fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY(user_id) REFERENCES usuarios(id)
+            )
+        ''')
+
+        # Crear tabla de juicios
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS juicios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                tabla TEXT,
+                caso_id INTEGER,
+                fiscal_id INTEGER,
+                defensor_id INTEGER,
+                fiscal_alegato TEXT,
+                defensor_alegato TEXT,
+                estado TEXT DEFAULT 'pendiente',
+                fiscal_puntos INTEGER,
+                defensor_puntos INTEGER,
+                ganador_id INTEGER,
+                resultado TEXT,
+                FOREIGN KEY(fiscal_id) REFERENCES usuarios(id),
+                FOREIGN KEY(defensor_id) REFERENCES usuarios(id)
+            )
+        ''')
+
+        # Crear tablas de casos
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS casos_penales (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                titulo TEXT NOT NULL,
+                hechos TEXT,
+                pruebas TEXT,
+                testigos TEXT,
+                defensa TEXT,
+                ley TEXT,
+                procedimiento TEXT,
+                dificultad INTEGER
+            )
+        ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS casos_civil (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                titulo TEXT NOT NULL,
+                hechos TEXT,
+                pruebas TEXT,
+                testigos TEXT,
+                defensa TEXT,
+                ley TEXT,
+                procedimiento TEXT,
+                dificultad INTEGER
+            )
+        ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS casos_tierras (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                titulo TEXT NOT NULL,
+                hechos TEXT,
+                pruebas TEXT,
+                testigos TEXT,
+                defensa TEXT,
+                ley TEXT,
+                procedimiento TEXT,
+                dificultad INTEGER
+            )
+        ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS casos_administrativo (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                titulo TEXT NOT NULL,
+                hechos TEXT,
+                pruebas TEXT,
+                testigos TEXT,
+                defensa TEXT,
+                ley TEXT,
+                procedimiento TEXT,
+                dificultad INTEGER
+            )
+        ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS casos_familia (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                titulo TEXT NOT NULL,
+                hechos TEXT,
+                pruebas TEXT,
+                testigos TEXT,
+                defensa TEXT,
+                ley TEXT,
+                procedimiento TEXT,
+                dificultad INTEGER
+            )
+        ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS casos_ninos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                titulo TEXT NOT NULL,
+                hechos TEXT,
+                pruebas TEXT,
+                testigos TEXT,
+                defensa TEXT,
+                ley TEXT,
+                procedimiento TEXT,
+                dificultad INTEGER
+            )
+        ''')
+
+        conn.commit()
+        print("Base de datos inicializada correctamente.")
+    except sqlite3.Error as e:
+        print(f"Error al inicializar la base de datos: {e}")
+        raise
+    finally:
+        conn.close()
+
+# Inicializar la base de datos al arrancar la aplicación
+init_db()
 
 # Funciones auxiliares (sin cambios)
 def generate_recovery_code():
