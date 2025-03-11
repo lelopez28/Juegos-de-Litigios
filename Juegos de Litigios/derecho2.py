@@ -1,4 +1,3 @@
-# (Importaciones y configuración inicial existentes)
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,7 +12,7 @@ from werkzeug.utils import secure_filename
 print("Iniciando la aplicación...")
 
 app = Flask(__name__, template_folder='templates')
-app.secret_key = os.getenv("SECRET_KEY")  # Usar variable de entorno para la clave secreta
+app.secret_key = os.getenv("SECRET_KEY")
 print(f"SECRET_KEY: {app.secret_key}")
 
 # Configuración de la base de datos y carpeta de subidas
@@ -30,7 +29,7 @@ print(f"EMAIL_PASSWORD: {EMAIL_PASSWORD}")
 # Crear la carpeta de subidas si no existe
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
-     print(f"Carpeta de subidas creada: {UPLOAD_FOLDER}")
+    print(f"Carpeta de subidas creada: {UPLOAD_FOLDER}")
 
 # Función para inicializar la base de datos
 def init_db():
