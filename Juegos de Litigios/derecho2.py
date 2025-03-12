@@ -34,6 +34,20 @@ if not os.path.exists(UPLOAD_FOLDER):
 # Función para inicializar la base de datos
 def init_db():
     try:
+        print(f"Intentando acceder a {DB_PATH}")
+        data_dir = os.path.dirname(DB_PATH)  # Esto es "/data"
+        if not os.path.exists(data_dir):
+            print("El directorio /data no existe")
+            os.makedirs(data_dir, exist_ok=True)
+            print("Directorio /data creado")
+        else:
+            print("El directorio /data ya existe")
+
+        # Verificar permisos de escritura
+        if not os.access(data_dir, os.W_OK):
+            print("No hay permisos de escritura en /data")
+            raise PermissionError("No se pueden escribir en /data")
+
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
@@ -172,11 +186,12 @@ def init_db():
 
         conn.commit()
         print("Base de datos inicializada correctamente.")
-    except sqlite3.Error as e:
+    except (sqlite3.Error, PermissionError) as e:
         print(f"Error al inicializar la base de datos: {e}")
         raise
     finally:
-        conn.close()
+        if 'conn' in locals():
+            conn.close()
 
 # Inicializar la base de datos al arrancar la aplicación
 init_db()
