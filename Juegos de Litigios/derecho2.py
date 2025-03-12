@@ -183,6 +183,19 @@ init_db()
 
 print("Configuración inicial completada.")
 
+# Añadir una ruta de prueba simple
+@app.route('/test')
+def test():
+    return "¡La aplicación está funcionando!"
+
+# Confirmar que las rutas se cargaron
+print("Rutas cargadas correctamente:")
+for rule in app.url_map.iter_rules():
+    print(f" - {rule}")
+
+# Añadir depuración final
+print("Flask está listo para recibir solicitudes.")
+
 # Funciones auxiliares (sin cambios)
 def generate_recovery_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
