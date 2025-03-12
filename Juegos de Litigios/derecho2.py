@@ -12,7 +12,8 @@ from werkzeug.utils import secure_filename
 print("Iniciando la aplicación...")
 
 app = Flask(__name__, template_folder='templates')
-app.secret_key = os.getenv("SECRET_KEY")
+app.secret_key = os.getenv("SECRET_KEY", "Diosesamor")
+
 print(f"SECRET_KEY: {app.secret_key}")
 
 # Configuración de la base de datos y carpeta de subidas
